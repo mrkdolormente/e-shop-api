@@ -10,21 +10,7 @@ const productList = async (req, res) => {
     // Get product list from db
     const productList = await productsData.productList();
 
-    const productListFormatted = productList.map((product) => {
-      const [category] = product.categories;
-      const [seller] = product.sellers;
-
-      delete product.categories;
-      delete product.sellers;
-
-      return {
-        ...product,
-        category,
-        seller,
-      };
-    });
-
-    res.json(productListFormatted);
+    res.json(productList);
   } catch (error) {
     console.log(error);
     res.sendStatus(error?.status || 401);
@@ -40,19 +26,7 @@ const productInfo = async (req, res) => {
 
     if (!productInfo) throw { status: 401 };
 
-    const [category] = productInfo.categories;
-    const [seller] = productInfo.sellers;
-
-    delete productInfo.categories;
-    delete productInfo.sellers;
-
-    const productInfoFormatted = {
-      ...productInfo,
-      category,
-      seller,
-    };
-
-    res.json(productInfoFormatted);
+    res.json(productInfo);
   } catch (error) {
     res.sendStatus(error.status || 401);
   }

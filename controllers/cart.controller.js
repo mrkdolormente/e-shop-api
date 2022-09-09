@@ -1,30 +1,42 @@
+const { CART_STATUS } = require('../constants/enum');
 const cartData = require('../services/data/cart.data');
 
 /**
- * @description Get product list
+ * @description Get cart item list
  * @param {*} req Http request
  * @param {*} res Http response
  */
 const cartItemList = async (req, res) => {
   try {
-    // Get product list from db
-    const productList = await cartData.cartItemList();
+    const { _id: id } = req.authData;
 
-    const productListFormatted = productList.map((product) => {
-      const [category] = product.categories;
-      const [seller] = product.sellers;
+    const cartItemList = await cartData.cartItemList(id);
 
-      delete product.categories;
-      delete product.sellers;
+    res.json(cartItemList);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(error?.status || 401);
+  }
+};
 
-      return {
-        ...product,
-        category,
-        seller,
-      };
-    });
+const addToCart = async (req, res) => {
+  try {
+    const { productId } = req.body;
+    const { _id: userId } = req.authData;
 
-    res.json(productListFormatted);
+    const [cartItem] = await cartData.cartItem(userId, productId);
+    console.log(cartItem);
+    if (!cartItem) {
+      await cartData.addItemToCart(userId, productId);
+    } else {
+      await cartData.updateItemInCart(userId, productId, {
+        quantity: (cartItem.quantity += 1),
+        status: CART_STATUS.ADDED,
+        modifiedAt: new Date(),
+      });
+    }
+
+    res.json(cartItemList);
   } catch (error) {
     console.log(error);
     res.sendStatus(error?.status || 401);
@@ -33,4 +45,5 @@ const cartItemList = async (req, res) => {
 
 module.exports = {
   cartItemList,
+  addToCart,
 };

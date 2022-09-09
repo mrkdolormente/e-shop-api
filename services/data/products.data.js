@@ -18,16 +18,22 @@ const productList = async () => {
           from: 'categories',
           localField: 'category_id',
           foreignField: '_id',
-          as: 'categories',
+          as: 'category',
         },
+      },
+      {
+        $unwind: '$category',
       },
       {
         $lookup: {
           from: 'sellers',
           localField: 'seller_id',
           foreignField: '_id',
-          as: 'sellers',
+          as: 'seller',
         },
+      },
+      {
+        $unwind: '$seller',
       },
     ])
     .toArray();
@@ -43,16 +49,22 @@ const productInfo = async (id) => {
           from: 'categories',
           localField: 'category_id',
           foreignField: '_id',
-          as: 'categories',
+          as: 'category',
         },
+      },
+      {
+        $unwind: '$category',
       },
       {
         $lookup: {
           from: 'sellers',
           localField: 'seller_id',
           foreignField: '_id',
-          as: 'sellers',
+          as: 'seller',
         },
+      },
+      {
+        $unwind: '$seller',
       },
       {
         $match: {

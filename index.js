@@ -8,8 +8,9 @@ const app = express();
 const port = process.env.PORT | 3000;
 
 const authRoutes = require('./routes/auth.routes');
-const usersRoutes = require('./routes/users.routes');
+const cartRoutes = require('./routes/cart.routes');
 const productsRoutes = require('./routes/products.routes');
+const usersRoutes = require('./routes/users.routes');
 
 const verifyToken = require('./middlewares/verify-token.middleware');
 
@@ -23,10 +24,13 @@ app.use(cors());
 app.use('/auth', authRoutes);
 
 // Append users routes with verification
-app.use('/users', verifyToken, usersRoutes);
+app.use('/cart', verifyToken, cartRoutes);
 
 // Append products routes
 app.use('/products', productsRoutes);
+
+// Append users routes with verification
+app.use('/users', verifyToken, usersRoutes);
 
 // Add default message from parent route
 app.get('/', (req, res) => {

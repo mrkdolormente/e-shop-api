@@ -5,14 +5,11 @@ const dbConnection = require('../connection');
 
   console.log('Inserting dummy data...');
 
-  await db
-    .collection('users')
-    .insertOne({
-      _id: 1,
-      email: 'admin@gmail.com',
-      password: '$2a$12$CMaq/BlAHhLaaDuul7ljoeMVzt8t8xHPYCi0KIkBEPXKBMKk5yS2y',
-      createdAt: new Date(),
-    });
+  await db.collection('users').insertOne({
+    email: 'admin@gmail.com',
+    password: '$2a$12$CMaq/BlAHhLaaDuul7ljoeMVzt8t8xHPYCi0KIkBEPXKBMKk5yS2y',
+    createdAt: new Date(),
+  });
 
   await db.collection('categories').insertMany([
     { _id: 1, name: 'Home Appliances', createdAt: new Date() },
