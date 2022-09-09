@@ -56,11 +56,27 @@ const addItemToCart = async (userId, productId) => {
 const updateItemInCart = async (userId, productId, updateQuery) => {
   await _initialize();
 
-  return _collection.update(
+  return _collection.updateMany(
     { product_id: ObjectId(productId), user_id: ObjectId(userId) },
     { $set: updateQuery },
     { multi: true }
   );
+};
+
+const deleteItemInCart = async (id) => {
+  await _initialize();
+
+  return _collection.deleteOne({ _id: ObjectId(id) });
+};
+
+const deleteMultipleItemsInCart = async (ids) => {
+  await _initialize();
+
+  return _collection.deleteMany({
+    _id: {
+      $in: ids.map((id) => ObjectId(id)),
+    },
+  });
 };
 
 module.exports = {
@@ -68,4 +84,6 @@ module.exports = {
   cartItem,
   addItemToCart,
   updateItemInCart,
+  deleteItemInCart,
+  deleteMultipleItemsInCart,
 };

@@ -25,18 +25,48 @@ const addToCart = async (req, res) => {
     const { _id: userId } = req.authData;
 
     const [cartItem] = await cartData.cartItem(userId, productId);
-    console.log(cartItem);
+
+    let operationReturn;
+
     if (!cartItem) {
-      await cartData.addItemToCart(userId, productId);
+      operationReturn = await cartData.addItemToCart(userId, productId);
     } else {
-      await cartData.updateItemInCart(userId, productId, {
+      operationReturn = await cartData.updateItemInCart(userId, productId, {
         quantity: (cartItem.quantity += 1),
         status: CART_STATUS.ADDED,
         modifiedAt: new Date(),
       });
     }
 
-    res.json(cartItemList);
+    res.json(operationReturn);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(error?.status || 401);
+  }
+};
+
+const deleteItemInCart = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const operationReturn = await cartData.deleteItemInCart(id);
+
+    res.json(operationReturn);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(error?.status || 401);
+  }
+};
+
+const deleteMultipleItemsInCart = async (req, res) => {
+  try {
+    const { ids } = req.query;
+
+    console.log(ids);
+
+    const operationReturn = await cartData.deleteMultipleItemsInCart(ids);
+
+    res.json(operationReturn);
   } catch (error) {
     console.log(error);
     res.sendStatus(error?.status || 401);
@@ -46,4 +76,6 @@ const addToCart = async (req, res) => {
 module.exports = {
   cartItemList,
   addToCart,
+  deleteItemInCart,
+  deleteMultipleItemsInCart,
 };
