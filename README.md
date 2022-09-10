@@ -23,21 +23,40 @@ To publish and install packages to and from the public npm registry or a private
 
 ### Install npm packages
 
+To install npm packages run the command below to your terminal or cmd.
+
 ```shell
 npm install
 ```
-
-### Development server
-
-Run `npm start` command to run the development server locally. After running the dev server, open [postman](https://www.postman.com/) and create a GET request to `http://localhost:3000/`. The application will automatically reload if you change any of the source files with the use of [nodemon](https://www.npmjs.com/package/nodemon).
 
 ### Database
 
 Since the application is using MongoDB as database, you need to install MongoDB in your local machine to run it locally. Download MongoDB Community Edition [here](https://www.mongodb.com/docs/v5.0/installation/).
 
+### Initialize Database
+
+To create the db, collection and dummy data for the application run the below command.
+
+```shell
+node ./database/commands/initialize.db.js
+```
+
 ### Env
 
 Rename the `.env.local` to `.env` and assign a value to the required properties
+
+### Dummy Credentials
+
+To login to the application, enter the dummy credentials. This credentials is included in creating dummy data for the database.
+
+```shell
+email: admin@gmail.com
+password: admin
+```
+
+### Development server
+
+Run `npm start` command to run the development server locally. After running the dev server, open [postman](https://www.postman.com/) and create a GET request to `http://localhost:3000/`. The application will automatically reload if you change any of the source files with the use of [nodemon](https://www.npmjs.com/package/nodemon).
 
 ## Dependencies
 
