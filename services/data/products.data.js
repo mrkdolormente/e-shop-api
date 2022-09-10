@@ -1,3 +1,4 @@
+const { json } = require('body-parser');
 const { ObjectId } = require('mongodb');
 const dbConnection = require('../../database/connection');
 
@@ -8,7 +9,7 @@ const _initialize = async () => {
   _collection = db.collection('products');
 };
 
-const productList = async () => {
+const productList = async (filters = {}) => {
   await _initialize();
 
   return _collection
@@ -34,6 +35,9 @@ const productList = async () => {
       },
       {
         $unwind: '$seller',
+      },
+      {
+        $match: { ...filters },
       },
     ])
     .toArray();
@@ -75,7 +79,17 @@ const productInfo = async (id) => {
     .toArray();
 };
 
+const productSearch = async (query) => {
+  await _initialize();
+
+  return _collection
+    .find({ $text: { $search: query } }, { score: { $meta: 'textScore' } })
+    .sort({ score: { $meta: 'textScore' } })
+    .toArray();
+};
+
 module.exports = {
   productList,
   productInfo,
+  productSearch,
 };

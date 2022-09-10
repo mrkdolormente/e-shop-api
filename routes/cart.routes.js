@@ -5,6 +5,7 @@ const cartController = require('../controllers/cart.controller');
 
 routes.get('/', cartController.cartItemList);
 routes.post('/', cartController.addToCart);
+routes.put('/:id', cartController.updateItemInCart);
 routes.delete('/:id', cartController.deleteItemInCart);
 routes.delete('/', cartController.deleteMultipleItemsInCart);
 

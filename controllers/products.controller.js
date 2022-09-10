@@ -1,4 +1,5 @@
 const productsData = require('../services/data/products.data');
+const categoriesData = require('../services/data/categories.data');
 
 /**
  * @description Get product list
@@ -7,8 +8,20 @@ const productsData = require('../services/data/products.data');
  */
 const productList = async (req, res) => {
   try {
+    const { q, categoryId } = req.query;
+
     // Get product list from db
-    const productList = await productsData.productList();
+    let productList;
+
+    if (!q) {
+      let filters = {};
+
+      if (categoryId) filters = { ...filters, category_id: Number(categoryId) };
+
+      productList = await productsData.productList(filters);
+    } else {
+      productList = await productsData.productSearch(q);
+    }
 
     res.json(productList);
   } catch (error) {
@@ -32,7 +45,18 @@ const productInfo = async (req, res) => {
   }
 };
 
+const productCategoryList = async (req, res) => {
+  try {
+    const productCategoryList = await categoriesData.productCategoryList();
+    // Get search product list from db
+    res.json(productCategoryList);
+  } catch (error) {
+    res.sendStatus(error.status || 401);
+  }
+};
+
 module.exports = {
   productList,
   productInfo,
+  productCategoryList,
 };
