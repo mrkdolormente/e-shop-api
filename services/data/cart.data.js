@@ -53,7 +53,7 @@ const addItemToCart = async (userId, productId) => {
   });
 };
 
-const updateItemInCart = async (userId, productId, updateQuery) => {
+const updateItemInCartByUserAndProduct = async (userId, productId, updateQuery) => {
   await _initialize();
 
   return _collection.updateMany(
@@ -61,6 +61,12 @@ const updateItemInCart = async (userId, productId, updateQuery) => {
     { $set: updateQuery },
     { multi: true }
   );
+};
+
+const updateItemInCart = async (id, updateQuery) => {
+  await _initialize();
+
+  return _collection.updateMany({ _id: ObjectId(id) }, { $set: updateQuery }, { multi: true });
 };
 
 const deleteItemInCart = async (id) => {
@@ -83,6 +89,7 @@ module.exports = {
   cartItemList,
   cartItem,
   addItemToCart,
+  updateItemInCartByUserAndProduct,
   updateItemInCart,
   deleteItemInCart,
   deleteMultipleItemsInCart,

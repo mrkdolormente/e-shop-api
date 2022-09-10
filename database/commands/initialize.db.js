@@ -126,5 +126,9 @@ const dbConnection = require('../connection');
     },
   ]);
 
+  await db
+    .collection('products')
+    .createIndex({ name: 'text', price: 'text', brand: 'text', description: 'text' });
+
   console.log('Successfully inserted dummy data!');
 })();

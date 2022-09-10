@@ -31,7 +31,7 @@ const addToCart = async (req, res) => {
     if (!cartItem) {
       operationReturn = await cartData.addItemToCart(userId, productId);
     } else {
-      operationReturn = await cartData.updateItemInCart(userId, productId, {
+      operationReturn = await cartData.updateItemInCartByUserAndProduct(userId, productId, {
         quantity: (cartItem.quantity += 1),
         status: CART_STATUS.ADDED,
         modifiedAt: new Date(),
@@ -62,9 +62,28 @@ const deleteMultipleItemsInCart = async (req, res) => {
   try {
     const { ids } = req.query;
 
-    console.log(ids);
+    const operationReturn = await cartData.deleteMultipleItemsInCart(
+      typeof ids === 'string' ? [ids] : ids
+    );
 
-    const operationReturn = await cartData.deleteMultipleItemsInCart(ids);
+    res.json(operationReturn);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(error?.status || 401);
+  }
+};
+
+const updateItemInCart = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { quantity } = req.body;
+
+    console.log(id, quantity);
+
+    const operationReturn = await cartData.updateItemInCart(id, {
+      quantity: quantity,
+      modifiedAt: new Date(),
+    });
 
     res.json(operationReturn);
   } catch (error) {
@@ -78,4 +97,5 @@ module.exports = {
   addToCart,
   deleteItemInCart,
   deleteMultipleItemsInCart,
+  updateItemInCart,
 };
